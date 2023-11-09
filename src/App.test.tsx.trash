@@ -1,0 +1,90 @@
+// import { renderHook, act } from '@testing-library/react-hooks';
+// import useForm from './useForm';
+
+// describe('useForm', () => {
+//   test('should update form state and call onChange', () => {
+//     const initialValues = {
+//       username: '',
+//       password: '',
+//     };
+//     const handleChangeForm = jest.fn();
+//     const { result } = renderHook(() =>
+//       useForm(initialValues)
+//     );
+
+//     act(() => {
+//       result.current.handleChange({ target: { name: 'username', value: 'testuser' } }, handleChangeForm);
+//     });
+
+//     expect(result.current.values.username).toBe('testuser');
+//     expect(handleChangeForm).toHaveBeenCalledWith({ target: { name: 'username', value: 'testuser' } });
+//   });
+
+//   test('should update form errors after field validation', async () => {
+//     const initialValues = {
+//       username: '',
+//       password: '',
+//     };
+//     const validationSchema = {
+//       fields: {
+//         username: {
+//           required: true,
+//           message: 'Username is required',
+//         },
+//         password: {
+//           required: true,
+//           message: 'Password is required',
+//         },
+//       },
+//     };
+//     const { result } = renderHook(() =>
+//       useForm(initialValues, validationSchema)
+//     );
+
+//     act(() => {
+//       result.current.handleChange({ target: { name: 'username', value: '' } });
+//     });
+
+//     await act(async () => {
+//       result.current.handleSubmit(
+//         { preventDefault: jest.fn() },
+//         jest.fn()
+//       );
+//     });
+
+//     expect(result.current.errors.username).toBe('Username is required');
+//   });
+
+//   test('should validate and submit form successfully', async () => {
+//     const initialValues = {
+//       username: 'testuser',
+//       password: 'testpassword',
+//     };
+//     const validationSchema = {
+//       fields: {
+//         username: {
+//           required: true,
+//           message: 'Username is required',
+//         },
+//         password: {
+//           required: true,
+//           message: 'Password is required',
+//         },
+//       },
+//     };
+//     const handleSubmitForm = jest.fn();
+//     const { result } = renderHook(() =>
+//       useForm(initialValues, validationSchema)
+//     );
+
+//     await act(async () => {
+//       result.current.handleSubmit(
+//         { preventDefault: jest.fn() },
+//         handleSubmitForm
+//       );
+//     });
+
+//     expect(handleSubmitForm).toHaveBeenCalledWith(initialValues);
+//     expect(result.current.errors).toEqual({});
+//   });
+// });
