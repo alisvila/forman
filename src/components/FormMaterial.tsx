@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import useForm from "../hooks/forman/useForm";
+import type { finalObject } from "../hooks/forman/types";
 import "../App.css";
 
 export default function FormMaterial() {
@@ -18,7 +19,7 @@ export default function FormMaterial() {
 
   const { handleSubmit, register } = useForm(initialValues);
 
-  const submit = (values: any) => {
+  const submit = (values: finalObject) => {
     console.log(values)
   };
 

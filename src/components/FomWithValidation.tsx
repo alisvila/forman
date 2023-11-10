@@ -1,6 +1,7 @@
-import React, { useState, ChangeEvent, useEffect, useRef } from "react";
+import React from "react";
 import * as yup from "yup";
 import useForm from "../hooks/forman/useForm";
+import type { finalObject } from "../hooks/forman/types";
 import "../App.css";
 
 const validationSchema = yup.object().shape({
@@ -23,14 +24,11 @@ const FomWithValidation = () => {
   const initialValues = {
     username: "",
     password: "",
-    moreDetail: true,
+    moreDetail: false,
     select: "meat",
   };
 
-  const renderCount = useRef(0);
-  renderCount.current = renderCount.current + 1;
-
-  const finalSubmit = (values: any) => {
+  const finalSubmit = (values: finalObject) => {
     console.log(values);
   };
 
@@ -41,9 +39,7 @@ const FomWithValidation = () => {
 
   return (
     <form onSubmit={handleSubmit(finalSubmit)} className="form-wrapper froman">
-      <h2 className="title">
-        Yup validation
-      </h2>
+      <h2 className="title">Yup validation</h2>
       <div>
         <label htmlFor="username">Username</label>
         <input
@@ -66,7 +62,7 @@ const FomWithValidation = () => {
       </div>
       <div>
         <label htmlFor="select">select</label>
-        <select  id="select" placeholder="select" {...withRef("select")}>
+        <select id="select" placeholder="select" {...withRef("select")}>
           <option value="fruit">Fruit</option>
           <option value="vegetable">Vegetable</option>
           <option value="meat">Meat</option>
@@ -82,7 +78,6 @@ const FomWithValidation = () => {
       </div>
 
       <button type="submit">Submit</button>
-      {String(renderCount.current)}
     </form>
   );
 };

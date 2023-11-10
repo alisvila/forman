@@ -12,10 +12,6 @@ type finalObject = {
   [key: string]: string | boolean;
 };
 
-type Exception = {
-  message: string;
-};
-
 type InputRef = RefObject<HTMLInputElement>;
 
 type SubmitHandler<T extends FormValues> = (
@@ -80,7 +76,6 @@ export type {
   FormErrors,
   FormValues,
   FormRegister,
-  Exception,
   SubmitForm,
   ChangeForm,
   InputRef,

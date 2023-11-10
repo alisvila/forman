@@ -1,12 +1,4 @@
-import React, {
-  useState,
-  ChangeEvent,
-  useRef,
-  useCallback,
-  useEffect,
-  FormEventHandler,
-  BaseSyntheticEvent,
-} from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import type {
   InputRefs,
   ValidationSchema,
@@ -42,9 +34,12 @@ const useForm = (
         ) {
           radioRefs.current[item][String(initialValues[item])].current.checked =
             true;
-        } else if (inputRefs.current[item].current.type === "checkbox") {
+        } else if (
+          Object.keys(inputRefs.current).includes(item) &&
+          inputRefs.current[item].current.type === "checkbox"
+        ) {
           inputRefs.current[item].current.checked = initialValues[item];
-        } else {
+        } else if (Object.keys(inputRefs.current).includes(item)) {
           inputRefs.current[item].current.value = initialValues[item];
         }
       });
@@ -56,10 +51,6 @@ const useForm = (
       const { name, value, type, checked } = event.target;
       const inputValue = type === "checkbox" ? checked : value;
 
-      // if (type === "radio") {
-      //   changeRadiio(name, value);
-      // }
-
       if (validationSchema && validationSchema.fields[name]) {
         await validateField(name, inputValue);
       }
@@ -70,18 +61,6 @@ const useForm = (
     },
     [validateField, validationSchema]
   );
-
-  const changeRadiio = (name: string, value: string) => {
-    if (Object.keys(radioRefs.current).length > 0 && radioRefs.current[name]) {
-      Object.keys(radioRefs.current[name]).map((item) => {
-        if (item === value) {
-          radioRefs.current[name][value].current.checked = true;
-        } else {
-          radioRefs.current[name][value].current.checked = false;
-        }
-      });
-    }
-  };
 
   const handleChange: ChangeForm = useCallback(
     async (event, fn) => {

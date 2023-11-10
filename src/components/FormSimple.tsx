@@ -1,5 +1,6 @@
 import React from "react";
 import useForm from "../hooks/forman/useForm";
+import type { finalObject } from "../hooks/forman/types";
 import "../App.css";
 
 const FormSimple = () => {
@@ -8,45 +9,40 @@ const FormSimple = () => {
     password: "bisar",
   };
 
-  const finalSubmit = (values: any) => {
+  const finalSubmit = (values: finalObject) => {
     console.log(values);
   };
 
-  const { handleSubmit, errors, withRef } = useForm(
-    initialValues,
-  );
+  const { handleSubmit, errors, withRef } = useForm(initialValues);
 
   return (
     <div className="froman">
-    <form onSubmit={handleSubmit(finalSubmit)} className="form-wrapper">
-      <h2 className="title">
-        Simple with default
-      </h2>
-      <div>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          {...withRef("username")}
-        />
-        {errors.username && <span className="alert">{errors.username}</span>}
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          placeholder="password"
-          type="text"
-          {...withRef("password")}
-        />
-        {errors.password && <span className="alert">{errors.password}</span>}
-      </div>
+      <form onSubmit={handleSubmit(finalSubmit)} className="form-wrapper">
+        <h2 className="title">Simple with default</h2>
+        <div>
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            placeholder="username"
+            type="text"
+            {...withRef("username", { required: true })}
+          />
+          {errors.username && <span className="alert">{errors.username}</span>}
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            placeholder="password"
+            type="password"
+            {...withRef("password", { required: true })}
+          />
+          {errors.password && <span className="alert">{errors.password}</span>}
+        </div>
 
-      <button type="submit">Submit</button>
-
-    </form>
+        <button type="submit">Submit</button>
+      </form>
     </div>
-
   );
 };
 

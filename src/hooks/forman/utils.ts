@@ -1,6 +1,6 @@
 import { createRef } from "react";
 import _debounce from "lodash/debounce";
-import { InputRefs, RadioRefs, finalObject } from "./types";
+import type { InputRefs, RadioRefs, finalObject } from "./types";
 
 const addInputRef = (name: string, inputRefs: InputRefs) => {
   if (inputRefs.current[name]) return inputRefs.current[name];

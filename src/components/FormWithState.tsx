@@ -1,6 +1,7 @@
-import React, { useState, ChangeEvent, useEffect, useRef } from "react";
-import useForm from "../hooks/forman/useForm";
+import React from "react";
 import * as yup from "yup";
+import useForm from "../hooks/forman/useForm";
+import { finalObject } from "../hooks/forman/types";
 import "../App.css";
 
 const validationSchema = yup.object().shape({
@@ -20,43 +21,28 @@ const validationSchema = yup.object().shape({
 });
 
 const MyForm = () => {
-  const [formField, setFormField]: any = useState({});
   const initialValues = {
     username: "aliam",
     password: "someRandomPass",
     accept: true,
     select: "meat",
     platform: "mac",
+    withState: ""
   };
 
-  const renderCount = useRef(0);
-  renderCount.current = renderCount.current + 1;
-
-  const finalSubmit = (values: any) => {
+  const finalSubmit = (values: finalObject) => {
     console.log(values);
-  };
-
-  const finalChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    // setFormField((prevValues: any) => ({
-    //   ...prevValues,
-    //   [name]: value,
-    // }));
-
-    console.log(formField, "finalChange");
   };
 
   const { register, handleSubmit, errors, withRef } = useForm(
     initialValues,
     validationSchema
   );
-  // const { register } = useForm(initialValues, validationSchema);
 
   return (
     <div className="froman">
       <form onSubmit={handleSubmit(finalSubmit)} className="form-wrapper">
-        {/* <form onSubmit={finalSubmit}> */}
+      <h2 className="title">All at once</h2>
         <div>
           <label htmlFor="username">Username</label>
           <input id="username" type="text" {...withRef("username")} />
@@ -67,7 +53,7 @@ const MyForm = () => {
           <input
             id="password"
             placeholder="password"
-            type="text"
+            type="password"
             {...withRef("password")}
           />
           {errors.password && <span className="alert">{errors.password}</span>}
@@ -84,9 +70,7 @@ const MyForm = () => {
         <div>
           <label htmlFor="accept">Accept</label>
           <input type="checkbox" {...withRef("accept")} />
-          {errors.accept && (
-            <span className="alert">{errors.accept}</span>
-          )}
+          {errors.accept && <span className="alert">{errors.accept}</span>}
         </div>
         <div>
           <span>Platform: </span>
@@ -117,7 +101,6 @@ const MyForm = () => {
 
         <button type="submit">Submit</button>
         <br></br>
-        {String(renderCount.current)}
       </form>
     </div>
   );
