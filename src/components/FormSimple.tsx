@@ -10,7 +10,7 @@ const FormSimple = () => {
   };
 
   const finalSubmit = (values: FinalObject) => {
-    console.log(values);
+    console.log("Simple", values);
   };
 
   const { handleSubmit, errors, withRef } = useForm(initialValues);

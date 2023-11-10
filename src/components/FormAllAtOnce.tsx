@@ -33,7 +33,7 @@ const FormAllAtOnce = () => {
   };
 
   const finalSubmit = (values: FinalObject) => {
-    console.log(values);
+    console.log("All at once", values);
   };
 
   const { register, handleSubmit, errors, withRef } = useForm(

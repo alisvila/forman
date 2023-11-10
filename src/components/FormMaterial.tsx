@@ -19,7 +19,7 @@ export default function FormMaterial() {
   const { handleSubmit, register } = useForm(initialValues);
 
   const submit = (values: FinalObject) => {
-    console.log(values);
+    console.log("Material", values);
   };
 
   return (

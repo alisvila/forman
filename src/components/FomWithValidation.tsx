@@ -29,7 +29,7 @@ const FomWithValidation = () => {
   };
 
   const finalSubmit = (values: FinalObject) => {
-    console.log(values);
+    console.log("Yup", values);
   };
 
   const { handleSubmit, errors, withRef } = useForm(
