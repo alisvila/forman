@@ -6,7 +6,8 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import useForm from "./hooks/forman/useForm";
+import useForm from "../hooks/forman/useForm";
+import "../App.css";
 
 export default function FormMaterial() {
 
@@ -31,7 +32,7 @@ export default function FormMaterial() {
         >
         <Grid container spacing={2}>
           <Typography component="h1" variant="h5">
-            Material ui form
+            Material ui
           </Typography>
             <Grid item md={12}>
               <TextField

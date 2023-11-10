@@ -1,5 +1,6 @@
 import React from "react";
-import useForm from "./hooks/forman/useForm";
+import useForm from "../hooks/forman/useForm";
+import "../App.css";
 
 const FormSimple = () => {
   const initialValues = {
@@ -19,7 +20,7 @@ const FormSimple = () => {
     <div className="froman">
     <form onSubmit={handleSubmit(finalSubmit)} className="form-wrapper">
       <h2 className="title">
-        Simple form
+        Simple with default
       </h2>
       <div>
         <label htmlFor="username">Username</label>

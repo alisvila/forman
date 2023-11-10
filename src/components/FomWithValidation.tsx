@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, useEffect, useRef } from "react";
 import * as yup from "yup";
-import useForm from "./hooks/forman/useForm";
-import "./App.css";
+import useForm from "../hooks/forman/useForm";
+import "../App.css";
 
 const validationSchema = yup.object().shape({
   username: yup
@@ -21,8 +21,8 @@ const validationSchema = yup.object().shape({
 
 const FomWithValidation = () => {
   const initialValues = {
-    username: "abbas",
-    password: "filan",
+    username: "",
+    password: "",
     moreDetail: true,
     select: "meat",
   };
@@ -42,12 +42,13 @@ const FomWithValidation = () => {
   return (
     <form onSubmit={handleSubmit(finalSubmit)} className="form-wrapper froman">
       <h2 className="title">
-        Yup validation form
+        Yup validation
       </h2>
       <div>
         <label htmlFor="username">Username</label>
         <input
           id="username"
+          placeholder="username"
           type="text"
           {...withRef("username")}
         />
@@ -64,8 +65,8 @@ const FomWithValidation = () => {
         {errors.password && <span className="alert">{errors.password}</span>}
       </div>
       <div>
-        <label htmlFor="password">select</label>
-        <select {...withRef("select")}>
+        <label htmlFor="select">select</label>
+        <select  id="select" placeholder="select" {...withRef("select")}>
           <option value="fruit">Fruit</option>
           <option value="vegetable">Vegetable</option>
           <option value="meat">Meat</option>

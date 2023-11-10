@@ -1,15 +1,15 @@
 import React from 'react'
-import FomrSimple from './FormSimple'
-import FomWithValidation from './FomWithValidation'
-import FormMaterial from './FormMaterial'
-import FormWithState from  './FormWithState'
+import FomrSimple from './components/FormSimple'
+import FomWithValidation from './components/FomWithValidation'
+import FormMaterial from './components/FormMaterial'
+import FormWithState from  './components/FormWithState'
 
 export default function App() {
   return (
     <div className='container'>
-      {/* <FomrSimple />
+      <FomrSimple />
       <FomWithValidation />
-      <FormMaterial /> */}
+      <FormMaterial />
       <FormWithState />
     </div>
   )

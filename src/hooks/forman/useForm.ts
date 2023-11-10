@@ -1,113 +1,167 @@
-import React, { useState, ChangeEvent, FormEvent, useRef, RefObject, useCallback, useEffect, createRef } from 'react';
-import type {InputRefs, ValidationSchema, FormHandlers, finalObject, FormErrors, FormValues, FormRegister } from './types'
-import {addInputRef, removeRef} from './utils'
-import useValidation from './useValidation';
+import React, {
+  useState,
+  ChangeEvent,
+  useRef,
+  useCallback,
+  useEffect,
+  FormEventHandler,
+  BaseSyntheticEvent,
+} from "react";
+import type {
+  InputRefs,
+  ValidationSchema,
+  FormHandlers,
+  FormValues,
+  FormRegister,
+  RadioRefs,
+  SubmitForm,
+  ChangeForm,
+} from "./types";
+import { addInputRef, addRadioRef, removeRef, removeRefRadio } from "./utils";
+import useValidation from "./useValidation";
 
-const useForm = (initialValues: FormValues, validationSchema?: ValidationSchema): FormHandlers => {
-
+const useForm = (
+  initialValues: FormValues,
+  validationSchema?: ValidationSchema
+): FormHandlers => {
   const [values, setValues] = useState<FormValues>(initialValues);
-  const {validateAll, validateField, errors} = useValidation(validationSchema)
+  const { validateAll, validateField, errors } =
+    useValidation(validationSchema);
   const inputRefs: InputRefs = useRef({});
-  // const radioRefs: InputRefs = useRef({});
-  
+  const radioRefs: RadioRefs = useRef({});
+
   useEffect(() => {
-    if (Object.keys(initialValues).length > 0 && Object.keys(inputRefs.current).length > 0) {
-      Object.keys(initialValues).map(item => {
-        // if (Object.keys(radioRefs.current).length > 0) {
-        //   radioRefs.current[String(initialValues[item])].current.checked = true
-        // }
-        if (inputRefs.current[item].current.type === 'checkbox') {
-          inputRefs.current[item].current.checked = initialValues[item]
+    if (
+      Object.keys(initialValues).length > 0 &&
+      Object.keys(inputRefs.current).length > 0
+    ) {
+      Object.keys(initialValues).map((item) => {
+        if (
+          Object.keys(radioRefs.current).length > 0 &&
+          radioRefs.current[item]
+        ) {
+          radioRefs.current[item][String(initialValues[item])].current.checked =
+            true;
+        } else if (inputRefs.current[item].current.type === "checkbox") {
+          inputRefs.current[item].current.checked = initialValues[item];
+        } else {
+          inputRefs.current[item].current.value = initialValues[item];
         }
-        else {
-          inputRefs.current[item].current.value = initialValues[item]
+      });
+    }
+  }, []);
+
+  const handleChangeWithRef: ChangeForm = useCallback(
+    async (event, fn) => {
+      const { name, value, type, checked } = event.target;
+      const inputValue = type === "checkbox" ? checked : value;
+
+      // if (type === "radio") {
+      //   changeRadiio(name, value);
+      // }
+
+      if (validationSchema && validationSchema.fields[name]) {
+        await validateField(name, inputValue);
+      }
+
+      if (fn) {
+        fn(event);
+      }
+    },
+    [validateField, validationSchema]
+  );
+
+  const changeRadiio = (name: string, value: string) => {
+    if (Object.keys(radioRefs.current).length > 0 && radioRefs.current[name]) {
+      Object.keys(radioRefs.current[name]).map((item) => {
+        if (item === value) {
+          radioRefs.current[name][value].current.checked = true;
+        } else {
+          radioRefs.current[name][value].current.checked = false;
         }
-      })
+      });
     }
-  }, [])
+  };
 
-  const handleWithRef = useCallback(async (
-    event: ChangeEvent<HTMLInputElement>,
-    fn?: (event: ChangeEvent<HTMLInputElement>) => void,
-    ) => {
-    const { name, value, type, checked } = event.target;
-    const inputValue = type === 'checkbox' ? checked : value;
+  const handleChange: ChangeForm = useCallback(
+    async (event, fn) => {
+      const { name, value, type, checked } = event.target;
+      const inputValue = type === "checkbox" ? checked : value;
 
-    if (validationSchema && validationSchema.fields[name]) {
-      await validateField(name, inputValue)
-    }
+      setValues((prevValues) => ({
+        ...prevValues,
+        [name]: inputValue,
+      }));
 
-    if (fn) {
-      fn(event);
-    }
-  }, [validateField, validationSchema]);
+      if (validationSchema) {
+        await validateField(name, inputValue);
+      }
+      if (fn) {
+        fn(event);
+      }
+    },
+    [validateField, validationSchema]
+  );
 
-  const handleChange = useCallback(async (
-    event: ChangeEvent<HTMLInputElement>,
-    fn?: (event: ChangeEvent<HTMLInputElement>) => void,
-  ) => {
-    const { name, value, type, checked } = event.target;
-    const inputValue = type === 'checkbox' ? checked : value;
-    console.log(value)
-    
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: inputValue,
-    }));
+  const handleSubmit: SubmitForm = useCallback(
+    (fn) => async (event) => {
+      event.preventDefault();
 
-    if (validationSchema) {
-      await validateField(name, inputValue);
-    }
-    if (fn) {
-      fn(event)
-    }
-  },[validateField, validationSchema]);
+      const refValues = removeRef(inputRefs);
+      const refRadio = removeRefRadio(radioRefs);
+      const finalValues = { ...values, ...refValues, ...refRadio };
+      const isInValid = await validateAll(finalValues);
 
-  const handleSubmit = useCallback((fn: (values: FormValues) => void) => async (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("clicked")
-    event.preventDefault();
+      if (isInValid) {
+        return;
+      } else {
+        fn({ ...finalValues });
+      }
+    },
+    [validateAll, values]
+  );
 
-    const refValues = removeRef(inputRefs)
-    const finalValues = {...refValues, ...values}
+  const register: FormRegister = useCallback(
+    (name, options = {}) => {
+      return {
+        name,
+        required: !!options.required,
+        min: options.min,
+        max: options.max,
+        maxLength: options.maxLength,
+        minLength: options.minLength,
+        disabled: !!options.disabled,
+        value: options.value,
+        onChange: (e) => handleChange(e),
+      };
+    },
+    [handleChange]
+  );
 
-    console.log(finalValues)
-    const isInValid = await validateAll(finalValues)
+  const withRef: FormRegister = useCallback(
+    (name, options = {}) => {
+      if (options.type === "radio") {
+        return {
+          name,
+          required: options.required,
+          value: options.value,
+          type: options.type,
+          ref: addRadioRef(name, radioRefs, options.value),
+          onChange: (e) => handleChangeWithRef(e, options.onChange),
+        };
+      } else {
+        return {
+          name,
+          required: options.required,
+          ref: addInputRef(name, inputRefs),
+          onChange: (e) => handleChangeWithRef(e, options.onChange),
+        };
+      }
+    },
+    [handleChangeWithRef]
+  );
 
-    if (isInValid) { 
-      return;
-    }
-    else {
-      fn({...finalValues});
-    }
-    
-  },[validateAll])
-
-  const register: FormRegister = useCallback((name, options = {}) => {
-    return {
-      name,
-      required: !!options.required,
-      min: options.min,
-      max: options.max,
-      maxLength: options.maxLength,
-      minLength: options.minLength,
-      disabled: !!options.disabled,
-      onChange: (e) => handleChange(e),
-      value: options.value
-    };
-  }, [handleChange]);
-
-
-  const withRef: FormRegister = useCallback((name, options = {}) => {
-
-    return {
-      name,
-      required: options.required,
-      ref: addInputRef(name, inputRefs),
-      onChange: (e) => handleWithRef(e, options.onChange),
-    };
-  }, [handleWithRef]);
-
-  return { register, handleChange, handleSubmit, values, errors, withRef };
+  return { register, handleChange, handleSubmit, errors, withRef };
 };
 
 export default useForm;
