@@ -1,16 +1,19 @@
 import { BaseSyntheticEvent, ChangeEvent, RefObject } from "react";
+import { AnyObjectSchema, InferType } from "yup";
 
 type FormValues = {
-  [key: string]: string | boolean;
+  [key: string]: InputValue;
 };
 
 type FormErrors = {
   [key: string]: string;
 };
 
-type finalObject = {
-  [key: string]: string | boolean;
+type FinalObject = {
+  [key: string]: InputValue;
 };
+
+type InputValue = string | number | boolean;
 
 type InputRef = RefObject<HTMLInputElement>;
 
@@ -36,7 +39,7 @@ type FormHandlers = {
   withRef: FormRegister;
 };
 
-type ValidationSchema = any;
+type ValidationSchema = InferType<AnyObjectSchema>;
 
 type FormOptions = Partial<{
   name: string;
@@ -72,11 +75,12 @@ export type {
   FormOptions,
   ValidationSchema,
   FormHandlers,
-  finalObject,
+  FinalObject,
   FormErrors,
   FormValues,
   FormRegister,
   SubmitForm,
   ChangeForm,
   InputRef,
+  InputValue
 };

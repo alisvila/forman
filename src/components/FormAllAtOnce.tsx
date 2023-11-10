@@ -1,7 +1,7 @@
 import React from "react";
 import * as yup from "yup";
-import useForm from "../hooks/forman/useForm";
-import { finalObject } from "../hooks/forman/types";
+import useForm from "../hooks/forman/forman";
+import { FinalObject } from "../hooks/forman/forman.types";
 import "../App.css";
 
 const validationSchema = yup.object().shape({
@@ -13,24 +13,26 @@ const validationSchema = yup.object().shape({
     .string()
     .required("Password is required.")
     .min(5, "Seems a bit short..."),
-  moreDetail: yup.boolean().oneOf([true], "you must check this"),
+  age: yup.string().required("required"),
+  accept: yup.boolean().oneOf([true], "you must check this"),
   withState: yup
     .string()
     .required("this field required.")
-    .min(5, "Seems a bit short..."),
+    .min(5, "Seems a bit short...")
 });
 
-const MyForm = () => {
+const FormAllAtOnce = () => {
   const initialValues = {
     username: "aliam",
     password: "someRandomPass",
     accept: true,
     select: "meat",
     platform: "mac",
-    withState: ""
+    withState: "",
+    age: 25
   };
 
-  const finalSubmit = (values: finalObject) => {
+  const finalSubmit = (values: FinalObject) => {
     console.log(values);
   };
 
@@ -42,7 +44,7 @@ const MyForm = () => {
   return (
     <div className="froman">
       <form onSubmit={handleSubmit(finalSubmit)} className="form-wrapper">
-      <h2 className="title">All at once</h2>
+        <h2 className="title">All at once</h2>
         <div>
           <label htmlFor="username">Username</label>
           <input id="username" type="text" {...withRef("username")} />
@@ -57,6 +59,11 @@ const MyForm = () => {
             {...withRef("password")}
           />
           {errors.password && <span className="alert">{errors.password}</span>}
+        </div>
+        <div>
+          <label htmlFor="age">age</label>
+          <input id="age" type="number" placeholder="0" {...withRef("age")} />
+          {errors.age && <span className="alert">{errors.age}</span>}
         </div>
         <div>
           <label htmlFor="password">Select</label>
@@ -100,10 +107,9 @@ const MyForm = () => {
         </div>
 
         <button type="submit">Submit</button>
-        <br></br>
       </form>
     </div>
   );
 };
 
-export default MyForm;
+export default FormAllAtOnce;

@@ -1,7 +1,7 @@
 import React from "react";
 import * as yup from "yup";
-import useForm from "../hooks/forman/useForm";
-import type { finalObject } from "../hooks/forman/types";
+import useForm from "../hooks/forman/forman";
+import type { FinalObject } from "../hooks/forman/forman.types";
 import "../App.css";
 
 const validationSchema = yup.object().shape({
@@ -17,7 +17,7 @@ const validationSchema = yup.object().shape({
   farhad: yup
     .string()
     .required("Password is required.")
-    .min(5, "Seems a bit short..."),
+    .min(5, "Seems a bit short...")
 });
 
 const FomWithValidation = () => {
@@ -25,10 +25,10 @@ const FomWithValidation = () => {
     username: "",
     password: "",
     moreDetail: false,
-    select: "meat",
+    select: "meat"
   };
 
-  const finalSubmit = (values: finalObject) => {
+  const finalSubmit = (values: FinalObject) => {
     console.log(values);
   };
 

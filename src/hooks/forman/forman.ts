@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import type {
   InputRefs,
   ValidationSchema,
@@ -7,10 +7,16 @@ import type {
   FormRegister,
   RadioRefs,
   SubmitForm,
-  ChangeForm,
-} from "./types";
-import { addInputRef, addRadioRef, removeRef, removeRefRadio } from "./utils";
-import useValidation from "./useValidation";
+  ChangeForm
+} from "./forman.types";
+import {
+  addInputRef,
+  addRadioRef,
+  removeRef,
+  removeRadioRef,
+  inputTypeValue
+} from "./forman.utils";
+import useValidation from "../forval/useValidation";
 
 const useForm = (
   initialValues: FormValues,
@@ -23,6 +29,7 @@ const useForm = (
   const radioRefs: RadioRefs = useRef({});
 
   useEffect(() => {
+    // add initial values
     if (
       Object.keys(initialValues).length > 0 &&
       Object.keys(inputRefs.current).length > 0
@@ -49,7 +56,7 @@ const useForm = (
   const handleChangeWithRef: ChangeForm = useCallback(
     async (event, fn) => {
       const { name, value, type, checked } = event.target;
-      const inputValue = type === "checkbox" ? checked : value;
+      const inputValue = inputTypeValue(type, checked, value);
 
       if (validationSchema && validationSchema.fields[name]) {
         await validateField(name, inputValue);
@@ -69,7 +76,7 @@ const useForm = (
 
       setValues((prevValues) => ({
         ...prevValues,
-        [name]: inputValue,
+        [name]: inputValue
       }));
 
       if (validationSchema) {
@@ -87,7 +94,7 @@ const useForm = (
       event.preventDefault();
 
       const refValues = removeRef(inputRefs);
-      const refRadio = removeRefRadio(radioRefs);
+      const refRadio = removeRadioRef(radioRefs);
       const finalValues = { ...values, ...refValues, ...refRadio };
       const isInValid = await validateAll(finalValues);
 
@@ -111,7 +118,7 @@ const useForm = (
         minLength: options.minLength,
         disabled: !!options.disabled,
         value: options.value,
-        onChange: (e) => handleChange(e),
+        onChange: (e) => handleChange(e)
       };
     },
     [handleChange]
@@ -126,14 +133,14 @@ const useForm = (
           value: options.value,
           type: options.type,
           ref: addRadioRef(name, radioRefs, options.value),
-          onChange: (e) => handleChangeWithRef(e, options.onChange),
+          onChange: (e) => handleChangeWithRef(e, options.onChange)
         };
       } else {
         return {
           name,
           required: options.required,
           ref: addInputRef(name, inputRefs),
-          onChange: (e) => handleChangeWithRef(e, options.onChange),
+          onChange: (e) => handleChangeWithRef(e, options.onChange)
         };
       }
     },

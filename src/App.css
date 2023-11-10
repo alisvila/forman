@@ -1,7 +1,7 @@
 .container {
   max-width: 720px;
   margin: 0 auto;
-  background-color:azure;
+  background-color: azure;
 }
 
 .form-wrapper {
@@ -18,7 +18,10 @@
   padding: 12px 20px;
 }
 
-.froman input[type=text], .froman input[type=password], .froman select {
+.froman input[type="text"],
+.froman input[type="password"],
+.froman input[type="number"],
+.froman select {
   width: 100%;
   margin: 8px 0;
   display: inline-block;
@@ -39,7 +42,7 @@
   padding: 0;
   margin: 0;
   font-weight: 400;
-  margin-bottom: 15px
+  margin-bottom: 15px;
 }
 
 .froman .alert {

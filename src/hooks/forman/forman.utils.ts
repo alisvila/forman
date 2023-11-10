@@ -1,6 +1,11 @@
 import { createRef } from "react";
 import _debounce from "lodash/debounce";
-import type { InputRefs, RadioRefs, finalObject } from "./types";
+import type {
+  InputRefs,
+  RadioRefs,
+  FinalObject,
+  InputValue
+} from "./forman.types";
 
 const addInputRef = (name: string, inputRefs: InputRefs) => {
   if (inputRefs.current[name]) return inputRefs.current[name];
@@ -20,22 +25,20 @@ const withDebounce = (fn: any, time: number) => {
 };
 
 const removeRef = (inputRefs: InputRefs) => {
-  let obj: finalObject = {};
-  let objKeys = Object.keys(inputRefs.current);
+  const obj: FinalObject = {};
+  const objKeys = Object.keys(inputRefs.current);
 
   objKeys.map((item) => {
-    obj[item] =
-      inputRefs.current[item].current.type === "checkbox"
-        ? inputRefs.current[item].current.checked
-        : inputRefs.current[item].current.value;
+    const { type, checked, value } = inputRefs.current[item].current;
+    obj[item] = inputTypeValue(type, checked, value);
   });
 
   return obj;
 };
 
-const removeRefRadio = (inputRefs: RadioRefs) => {
-  let obj: finalObject = {};
-  let objKeys = Object.keys(inputRefs.current);
+const removeRadioRef = (inputRefs: RadioRefs) => {
+  const obj: FinalObject = {};
+  const objKeys = Object.keys(inputRefs.current);
 
   Object.keys(objKeys).map((item: any) => {
     Object.values(inputRefs.current[objKeys[item]]).map((key: any) => {
@@ -47,4 +50,29 @@ const removeRefRadio = (inputRefs: RadioRefs) => {
   return obj;
 };
 
-export { addInputRef, addRadioRef, removeRef, removeRefRadio, withDebounce };
+const inputTypeValue = (type: string, checked: boolean, value: InputValue) => {
+  let inputValue;
+  switch (type) {
+    case "checkbox":
+      inputValue = checked;
+      break;
+    case "number":
+      inputValue = +value;
+      break;
+
+    default:
+      inputValue = value;
+      break;
+  }
+
+  return inputValue;
+};
+
+export {
+  addInputRef,
+  addRadioRef,
+  removeRef,
+  removeRadioRef,
+  withDebounce,
+  inputTypeValue
+};

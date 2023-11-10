@@ -1,15 +1,15 @@
 import React from "react";
-import useForm from "../hooks/forman/useForm";
-import type { finalObject } from "../hooks/forman/types";
+import useForm from "../hooks/forman/forman";
+import type { FinalObject } from "../hooks/forman/forman.types";
 import "../App.css";
 
 const FormSimple = () => {
   const initialValues = {
     username: "filan",
-    password: "bisar",
+    password: "bisar"
   };
 
-  const finalSubmit = (values: finalObject) => {
+  const finalSubmit = (values: FinalObject) => {
     console.log(values);
   };
 

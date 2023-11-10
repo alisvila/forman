@@ -1,5 +1,10 @@
 import { useCallback, useState } from "react";
-import type { FormErrors, ValidationSchema, finalObject } from "./types";
+import type {
+  FormErrors,
+  ValidationSchema,
+  FinalObject,
+  InputValue
+} from "../forman/forman.types";
 
 const useValidation = (validationSchema?: ValidationSchema) => {
   const [errors, setErrors] = useState<FormErrors>({});
@@ -9,7 +14,7 @@ const useValidation = (validationSchema?: ValidationSchema) => {
       if (errors[name] !== "") {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          [name]: "",
+          [name]: ""
         }));
       }
     },
@@ -21,7 +26,7 @@ const useValidation = (validationSchema?: ValidationSchema) => {
       if (errors[name] !== error.message) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          [name]: error.message,
+          [name]: error.message
         }));
       }
     },
@@ -29,7 +34,7 @@ const useValidation = (validationSchema?: ValidationSchema) => {
   );
 
   const validateField = useCallback(
-    async (name: string, value: string | boolean) => {
+    async (name: string, value: InputValue) => {
       const schema = validationSchema.fields[name];
       if (!schema) return "";
 
@@ -45,13 +50,13 @@ const useValidation = (validationSchema?: ValidationSchema) => {
     [validationSchema, addError, removeError]
   );
 
-  const validateAll = async (finalValues: finalObject) => {
+  const validateAll = async (finalValues: FinalObject) => {
     const validationErrors: FormErrors = {};
     const validationPromises: Promise<void>[] = [];
 
     if (validationSchema) {
       Object.keys(finalValues).forEach((name: string) => {
-        let value = finalValues[name];
+        const value = finalValues[name];
         const schema = validationSchema.fields[name];
         if (schema) {
           validationPromises.push(
@@ -73,7 +78,7 @@ const useValidation = (validationSchema?: ValidationSchema) => {
 
     return Object.values(validationErrors).some((error) => error);
   };
-  
+
   return { validateAll, validateField, errors };
 };
 
